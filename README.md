@@ -1,49 +1,41 @@
-# Lufie Panel — личный кабинет
+# Lufie Panel (Netlify)
 
-Рабочий личный кабинет с входом через Discord (NextAuth + Discord OAuth2).
+Личный кабинет с входом через Discord.
 
-## Быстрый старт
+## Как задеплоить на Netlify
 
-1. **Добавь Redirect URL** в Discord Developer Portal → OAuth2 → Redirects:
-   ```
-   http://localhost:3000/api/auth/callback/discord
-   ```
+1. Зайди на https://app.netlify.com
+2. **Add new site** → **Import an existing project**
+3. Подключи GitHub и выбери репозиторий `lufie-panel` (или `lufie`)
+4. Настройки сборки обычно подхватываются сами:
+   - Build command: `npm run build`
+   - Publish directory: оставляй как есть (плагин сам разберётся)
+5. Перед деплоем добавь **Environment variables** (Site settings → Environment variables):
 
-2. Установи зависимости (если ещё не стоят):
-   ```bash
-   cd lufie-panel
-   npm install
-   ```
+```
+DISCORD_CLIENT_ID = 1564353474324598934
+DISCORD_CLIENT_SECRET = твой_секрет
+NEXTAUTH_SECRET = lufie-super-secret-key-change-me-in-production-2026
+NEXTAUTH_URL = https://твой-сайт.netlify.app
+```
 
-3. Запусти:
-   ```bash
-   npm run dev
-   ```
+6. Нажми Deploy
 
-4. Открой http://localhost:3000
+## Discord Redirect
 
-## Важно про безопасность
+В Discord Developer Portal → OAuth2 → Redirects добавь:
 
-Ты отправил Client Secret в чат. После того как всё заработает — зайди в Developer Portal → OAuth2 → **Reset Secret** и обнови значение в файле `.env.local`.
+```
+https://твой-сайт.netlify.app/api/auth/callback/discord
+```
 
-## Структура
+(замени на свою ссылку Netlify)
 
-- `/` — страница входа
-- `/dashboard` — личный кабинет (список твоих серверов)
-- `/api/auth/[...nextauth]` — обработчик Discord OAuth
+## Локальный запуск
 
-## Переменные окружения (`.env.local`)
+```bash
+npm install
+npm run dev
+```
 
-- `DISCORD_CLIENT_ID`
-- `DISCORD_CLIENT_SECRET`
-- `NEXTAUTH_SECRET`
-- `NEXTAUTH_URL=http://localhost:3000`
-
-## Деплой (Vercel)
-
-1. Залей папку на GitHub
-2. Импортируй в Vercel
-3. Добавь те же переменные окружения
-4. Добавь в Discord Redirects:
-   `https://твой-домен.vercel.app/api/auth/callback/discord`
-5. Поставь `NEXTAUTH_URL=https://твой-домен.vercel.app`
+Открой http://localhost:3000
